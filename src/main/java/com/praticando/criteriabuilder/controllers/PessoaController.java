@@ -3,6 +3,8 @@ package com.praticando.criteriabuilder.controllers;
 import com.praticando.criteriabuilder.models.PessoaEntity;
 import com.praticando.criteriabuilder.repositories.PessoaRepository;
 import com.praticando.criteriabuilder.services.PessoaService;
+import com.praticando.criteriabuilder.spec.PessoaComNomeSemelhanteSpec;
+import com.praticando.criteriabuilder.spec.PessoaMaiorDeIdadeSpec;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,5 +33,12 @@ public class PessoaController {
     @GetMapping("/comfiltro")
     public List<PessoaEntity> buscarPersonalizada(String nome, Integer idade){
         return pessoaRepository.BuscaPersonalizadaNomeIdade(nome,idade);
+    }
+
+    @GetMapping("/pessoa-maior-de-idade")
+    public List<PessoaEntity> buscarNomeMaiorDeIdade(String nome){
+        var nomeSpec = new PessoaComNomeSemelhanteSpec(nome);
+        var idadeSpec = new PessoaMaiorDeIdadeSpec();
+        return pessoaRepository.findAll(idadeSpec.and(nomeSpec));
     }
 }
